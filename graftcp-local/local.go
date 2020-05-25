@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 	"math/rand"
@@ -197,8 +196,6 @@ func (l *Local) HandleConn(conn net.Conn) error {
 	}
 	go pipe(conn, destConn)
 	pipe(destConn, conn)
-	conn.Close()
-	destConn.Close()
 	return nil
 }
 
@@ -209,7 +206,7 @@ func pipe(dst, src net.Conn) {
 	}()
 	_, err := io.Copy(dst, src)
 
-	if errors.Is(err, io.EOF) {
+	if err==io.EOF {
 		dlog.Debugf("receive EOF and close conn")
 	}else if err!=nil && err.Error()!="use of closed network connection" { // https://github.com/golang/go/issues/4373
 		dlog.Errorf("occur error %s and close conn", err.Error())
