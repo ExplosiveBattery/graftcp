@@ -208,7 +208,7 @@ func pipe(dst, src net.Conn) {
 
 	if err==io.EOF {
 		dlog.Debugf("receive EOF and close conn")
-	}else if err!=nil && err.Error()!="use of closed network connection" { // https://github.com/golang/go/issues/4373
+	}else if err!=nil && !strings.Contains(err.Error(), "use of closed network connection") { // https://github.com/golang/go/issues/4373
 		dlog.Errorf("occur error %s and close conn", err.Error())
 	}
 	return
